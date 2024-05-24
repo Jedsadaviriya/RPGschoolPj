@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,15 +7,42 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using C__Spiel_Janjao.Resources;
 using Microsoft.VisualBasic.ApplicationServices;
 
 namespace C__Spiel_Janjao
 {
     public partial class Start : Form
     {
+        
+        private Form inventoryForm = new Form()
+        {
+            ControlBox = false, MaximizeBox = false, FormBorderStyle = FormBorderStyle.None,
+            
+            
+        };
+
+        
+
+        
+
+
+
+
+
+
+
+
+
+        public PictureBox picturebox;
+        Random spawn = new Random();
+        public int PosSpawnx;
+        public int PosSpawny;
+
         private int enemydamageradius = 60;
         private int enemyHealth = 100;
         int enemydamage = 2;
@@ -41,12 +69,86 @@ namespace C__Spiel_Janjao
             timer1.Tick += timer1_Tick;
             timer1.Start();
             regentimer.Start();
+            InitializeInventoryForm();
+            GenerateItem();
+
 
         }
         private void Close_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
+
+
+        private void InitializeInventoryForm()
+        {
+            // Create a TableLayoutPanel
+            TableLayoutPanel tableLayoutPanel = new TableLayoutPanel
+            {
+                RowCount = 5,
+                ColumnCount = 5,
+                Dock = DockStyle.Fill
+            };
+
+            // Set row and column styles
+            for (int i = 0; i < 5; i++)
+            {
+                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            }
+
+            // Add buttons to each cell of the grid
+            for (int row = 0; row < 5; row++)
+            {
+                for (int col = 0; col < 5; col++)
+                {
+                    Button button = new Button
+                    {
+                        Dock = DockStyle.Fill,
+                        Margin = new Padding(1),
+                        Text = string.Empty // Empty button for now, you can add more details later
+                    };
+                    tableLayoutPanel.Controls.Add(button, col, row);
+                }
+            }
+
+            // Add the TableLayoutPanel to the inventoryForm
+            inventoryForm.Controls.Add(tableLayoutPanel);
+            inventoryForm.ClientSize = new System.Drawing.Size(400, 400);
+            inventoryForm.Text = "Inventory";
+        }
+
+
+        static void GenerateItem()
+        {
+            PictureBox itemPictureBox = new PictureBox
+            {
+                Size = new Size(50, 50),
+                BackColor = Color.Red // Set the background color of the PictureBox
+            };
+
+            // Display the PictureBox in a form (optional)
+            Form form = new Form
+            {
+                Width = 100,
+                Height = 100,
+                Controls = { itemPictureBox }
+            };
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         private void Wall(int xPos, int yPos)
         {
@@ -109,6 +211,7 @@ namespace C__Spiel_Janjao
         }
         private void MoveControl(object sender, KeyEventArgs e)
         {
+            
             switch (e.KeyCode)
             {
                 case Keys.W:
@@ -124,12 +227,18 @@ namespace C__Spiel_Janjao
                     movingRight = true;
                     break;
             }
+            if (e.KeyCode == Keys.I)
+            {
+                inventoryForm.Show();
+            }
         }
 
-
+        
 
         private void Start_KeyUp(object sender, KeyEventArgs e)
         {
+            
+
             switch (e.KeyCode)
             {
                 case Keys.W:
@@ -144,6 +253,10 @@ namespace C__Spiel_Janjao
                 case Keys.D:
                     movingRight = false;
                     break;
+            }
+            if (e.KeyCode == Keys.I)
+            {
+                inventoryForm.Hide();
             }
         }
         private void timer1_Tick(object sender, EventArgs e)
@@ -186,7 +299,7 @@ namespace C__Spiel_Janjao
                     pictureBox2.Top = Math.Max(0, pictureBox2.Top - (distance / 3));
                 }
             }
-
+            
             UpdateHealthLabelPosition();
             UpdatePlayerHealthLabelPosition();
             CheckPLayerDamage();
@@ -259,6 +372,7 @@ namespace C__Spiel_Janjao
                 string gameover = "Game over";
                 MessageBox.Show(gameover);
                 Application.Exit();
+
             }
         }
         private void regen()
@@ -271,11 +385,7 @@ namespace C__Spiel_Janjao
         }
         private void enemyspawn()
         {
-            if (enemy1dead)
-            {
-                pictureBox1 = new PictureBox();
-                pictureBox1.Location = new Point(50, 50);
-            }
+
         }
 
 
@@ -321,29 +431,125 @@ namespace C__Spiel_Janjao
 
         }
 
+        public void spawer()
+        {
+            
+            PosSpawnx = spawn.Next(50, 910);
+            PosSpawny = spawn.Next(125, 490);
+            picturebox.BackColor = Color.Red;
+            Height = 50;
+            Width = 50;
+            picturebox.Location = new Point(PosSpawnx, PosSpawny);
+            timer1.Start();
+            Controls.Add(picturebox);
+            if (enemy1dead == false)
+            {
+
+                if (picturebox.Location.X < pictureBox1.Location.X + 50)
+                {
+                    picturebox.Left = Math.Min(ClientSize.Width - picturebox.Width, picturebox.Left + (distance / 3));
+                }
+                if (picturebox.Location.X > pictureBox1.Location.X - 50)
+                {
+                    picturebox.Left = Math.Max(0, picturebox.Left - (distance / 3));
+                }
+                if (picturebox.Location.Y < pictureBox1.Location.Y + 50)
+                {
+                    picturebox.Top = Math.Min(ClientSize.Height - picturebox.Height, picturebox.Top + (distance / 3));
+                }
+                if (picturebox.Location.Y > pictureBox1.Location.Y - 50)
+                {
+                    picturebox.Top = Math.Max(0, picturebox.Top - (distance / 3));
+                }
+            }
+        
+
+
+        }
+        private void spawning()
+        {
+            
+        }
+
         private void TimerEnemySpawn_Tick(object sender, EventArgs e)
         {
-            int EnemySpawnTick = 0;
-            if (EnemySpawnTick == 0)
+            Random hori = new Random();
+            Random vert = new Random();
+            int Horiz = hori.Next(50, 910);
+            int Verti = vert.Next(125, 490);
+            TimerEnemySpawn.Start();
+            for (int i = 0; i < 3; i++)
             {
-                enemyspawn();
-                EnemySpawnTick += 1;
-            }
-            if (EnemySpawnTick == 1)
-            {
-                EnemySpawnTick -= 1;
-            }
-            else
-            {
-                enemyspawn();
-                EnemySpawnTick = 0;
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.BackColor = Color.Black;
+                pictureBox.Location = new Point(Horiz, Verti);
+                pictureBox.Width = 50;
+                pictureBox.Height = 50;
+                if (enemy1dead == false)
+                {
+
+                    if (pictureBox.Location.X < pictureBox1.Location.X + 50)
+                    {
+                        pictureBox.Left = Math.Min(ClientSize.Width - pictureBox.Width, pictureBox.Left + (distance / 3));
+                    }
+                    if (pictureBox.Location.X > pictureBox1.Location.X - 50)
+                    {
+                        pictureBox.Left = Math.Max(0, pictureBox.Left - (distance / 3));
+                    }
+                    if (pictureBox.Location.Y < pictureBox1.Location.Y + 50)
+                    {
+                        pictureBox.Top = Math.Min(ClientSize.Height - pictureBox.Height, pictureBox.Top + (distance / 3));
+                    }
+                    if (pictureBox.Location.Y > pictureBox1.Location.Y - 50)
+                    {
+                        pictureBox.Top = Math.Max(0, pictureBox.Top - (distance / 3));
+                    }
+                }
             }
         }
 
         private void EnemyDMG_tick_Tick(object sender, EventArgs e)
         {
-             
+
         }
+
+        private void TimerEnemySpawn_Tick_1(object sender, EventArgs e)
+        {
+            Random hori = new Random();
+            Random vert = new Random();
+            int Horiz = hori.Next(50, 910);
+            int Verti = vert.Next(125, 490);
+            TimerEnemySpawn.Start();
+            for (int i = 0; i < 3; i++)
+            {
+                PictureBox pictureBox = new PictureBox();
+                pictureBox.BackColor = Color.Black;
+                pictureBox.Location = new Point(Horiz, Verti);
+                pictureBox.Width = 50;
+                pictureBox.Height = 50;
+                if (enemy1dead == false)
+                {
+
+                    if (pictureBox.Location.X < pictureBox1.Location.X + 50)
+                    {
+                        pictureBox.Left = Math.Min(ClientSize.Width - pictureBox.Width, pictureBox.Left + (distance / 3));
+                    }
+                    if (pictureBox.Location.X > pictureBox1.Location.X - 50)
+                    {
+                        pictureBox.Left = Math.Max(0, pictureBox.Left - (distance / 3));
+                    }
+                    if (pictureBox.Location.Y < pictureBox1.Location.Y + 50)
+                    {
+                        pictureBox.Top = Math.Min(ClientSize.Height - pictureBox.Height, pictureBox.Top + (distance / 3));
+                    }
+                    if (pictureBox.Location.Y > pictureBox1.Location.Y - 50)
+                    {
+                        pictureBox.Top = Math.Max(0, pictureBox.Top - (distance / 3));
+                    }
+                }
+            }
+        }
+        
     }
 }
     

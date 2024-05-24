@@ -12,6 +12,8 @@ namespace C__Spiel_Janjao
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
+
         }
+        
     }
 }

@@ -22,13 +22,13 @@ namespace C__Spiel_Janjao
         private Form inventoryForm = new Form()
         {
             ControlBox = false, MaximizeBox = false, FormBorderStyle = FormBorderStyle.None,
-            
-            
+            StartPosition = FormStartPosition.Manual
+
         };
-
         
 
         
+
 
 
 
@@ -58,6 +58,9 @@ namespace C__Spiel_Janjao
 
         public Start()
         {
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(960, 0);
+
             InitializeComponent();
             UpdatePlayerHealthLabel();
             Wall(150, 150);
@@ -71,8 +74,8 @@ namespace C__Spiel_Janjao
             regentimer.Start();
             InitializeInventoryForm();
             GenerateItem();
-
-
+            inventoryForm.Location = new Point(0, 0);
+            
         }
         private void Close_Click(object sender, EventArgs e)
         {
@@ -550,6 +553,14 @@ namespace C__Spiel_Janjao
             }
         }
         
+    }
+    public class enemy
+    {
+        
+        
+        //
+
+
     }
 }
     

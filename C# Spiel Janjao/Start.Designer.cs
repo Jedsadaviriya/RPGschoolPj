@@ -62,7 +62,6 @@
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
             pictureBox1.TabIndex = 5;
             pictureBox1.TabStop = false;
-            pictureBox1.Click += pictureBox1_Click;
             // 
             // timer1
             // 
@@ -71,7 +70,7 @@
             // pictureBox2
             // 
             pictureBox2.BackColor = Color.Red;
-            pictureBox2.Location = new Point(698, 240);
+            pictureBox2.Location = new Point(700, 240);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(50, 50);
             pictureBox2.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -86,15 +85,14 @@
             healthLabel.Name = "healthLabel";
             healthLabel.Size = new Size(0, 20);
             healthLabel.TabIndex = 7;
-            healthLabel.Click += healthLabel_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new Font("Impact", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label1.Location = new Point(223, 29);
+            label1.Font = new Font("Arial", 24F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(170, 16);
             label1.Name = "label1";
-            label1.Size = new Size(80, 35);
+            label1.Size = new Size(131, 46);
             label1.TabIndex = 8;
             label1.Text = "XP : 0";
             // 
@@ -106,11 +104,6 @@
             // TimerEnemySpawn
             // 
             TimerEnemySpawn.Enabled = true;
-            TimerEnemySpawn.Tick += TimerEnemySpawn_Tick_1;
-            // 
-            // EnemyDMG_tick
-            // 
-            EnemyDMG_tick.Tick += EnemyDMG_tick_Tick;
             // 
             // Start
             // 
@@ -125,8 +118,6 @@
             MaximizeBox = false;
             Name = "Start";
             TopMost = true;
-            Load += Start_Load;
-            Click += Start_Click;
             KeyDown += MoveControl;
             KeyUp += MoveControl;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
